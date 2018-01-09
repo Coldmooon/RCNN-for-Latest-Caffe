@@ -24,12 +24,16 @@ else
   rcnn_model = rcnn_model_or_file;
 end
 
-rcnn_model.cnn.init_key = ...
-    caffe('init', rcnn_model.cnn.definition_file, rcnn_model.cnn.binary_file);
+% rcnn_model.cnn.init_key = ...
+%     caffe('init', rcnn_model.cnn.definition_file, rcnn_model.cnn.binary_file);
+rcnn_model.cnn.model = caffe.Net(rcnn_model.cnn.definition_file,  rcnn_model.cnn.binary_file, 'test');
+
 if exist('use_gpu', 'var') && ~use_gpu
-  caffe('set_mode_cpu');
+    caffe.set_mode_cpu();
 else
-  caffe('set_mode_gpu');
+    caffe.set_mode_gpu();
+    caffe.set_device(0);
 end
-caffe('set_phase_test');
-rcnn_model.cnn.layers = caffe('get_weights');
+% caffe('set_phase_test');
+% rcnn_model.cnn.layers = caffe('get_weights');
+rcnn_model.cnn.layers = rcnn_model.cnn.model.params('fc7',1).get_data();

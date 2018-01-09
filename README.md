@@ -1,3 +1,14 @@
+## For the latest Caffe
+
+The following files are modified:
+rcnn_features.m
+rcnn_load_model.m
+
+To use RCNN in the latest caffe,
+1. download caffe and compile it.
+2. download this repo and follow the `rcnn` instruction to install.
+done!
+
 ### This code base is no longer maintained and exists as a historical artifact to supplement our CVPR and PAMI papers on Region-based Convolutional Neural Netwoks. For more recent work that's faster and more accurrate, please see [Fast and Faster R-CNN](https://github.com/rbgirshick/py-faster-rcnn).
 
 ## R-CNN: *Region-based Convolutional Neural Networks*

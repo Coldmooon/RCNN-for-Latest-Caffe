@@ -17,9 +17,9 @@ function feat = rcnn_features(im, boxes, rcnn_model)
 % ---------------------------------------------------------
 
 % make sure that caffe has been initialized for this model
-if rcnn_model.cnn.init_key ~= caffe('get_init_key')
-  error('You probably need to call rcnn_load_model');
-end
+% if rcnn_model.cnn.init_key ~= caffe('get_init_key')
+%   error('You probably need to call rcnn_load_model');
+% end
 
 % Each batch contains 256 (default) image regions.
 % Processing more than this many at once takes too much memory
@@ -33,7 +33,8 @@ feat = [];
 curr = 1;
 for j = 1:length(batches)
   % forward propagate batch of region images 
-  f = caffe('forward', batches(j));
+%   f = caffe('forward', batches(j));
+  f = rcnn_model.cnn.model.forward({batches{j}});
   f = f{1};
   f = f(:);
   
