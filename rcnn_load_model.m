@@ -1,4 +1,4 @@
-function rcnn_model = rcnn_load_model(rcnn_model_or_file, use_gpu)
+ function rcnn_model = rcnn_load_model(rcnn_model_or_file, use_gpu)
 % rcnn_model = rcnn_load_model(rcnn_model_or_file, use_gpu)
 %   Takes an rcnn_model structure and loads the associated Caffe
 %   CNN into memory. Since this is nasty global state that is carried
@@ -36,4 +36,4 @@ else
 end
 % caffe('set_phase_test');
 % rcnn_model.cnn.layers = caffe('get_weights');
-rcnn_model.cnn.layers = rcnn_model.cnn.model.params('fc7',1).get_data();
+rcnn_model.cnn.layers = rcnn_model.cnn.model.params('conv5',1).get_data();
