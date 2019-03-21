@@ -98,6 +98,9 @@ caches = {};
 for i = imdb.class_ids
   fprintf('%14s has %6d positive instances\n', ...
       imdb.classes{i}, size(X_pos{i},1));
+  if size(X_pos{i},1) == 0
+      continue
+  end
   X_pos{i} = rcnn_pool5_to_fcX(X_pos{i}, opts.layer, rcnn_model);
   X_pos{i} = rcnn_scale_features(X_pos{i}, opts.feat_norm_mean);
   caches{i} = init_cache(X_pos{i}, keys_pos{i});
@@ -123,6 +126,11 @@ for hard_epoch = 1:max_hard_epochs
     % Add sampled negatives to each classes training cache, removing
     % duplicates
     for j = imdb.class_ids
+      if isempty(caches{j})
+          fprintf('%14s has %6d positive instances over the whole dataset, skipped...\n', ...
+                   imdb.classes{j}, 0);
+          continue
+      end
       if ~isempty(keys{j})
         if ~isempty(caches{j}.keys_neg)
           [~, ~, dups] = intersect(caches{j}.keys_neg, keys{j}, 'rows');
@@ -241,6 +249,11 @@ if first_time
 else
   zs = bsxfun(@plus, d.feat*rcnn_model.detectors.W, rcnn_model.detectors.B);
   for cls_id = class_ids
+    if isempty(caches{cls_id})
+      fprintf('%14s has %6d positive instances over the whole dataset, skipped...\n', ...
+                 imdb.classes{cls_id}, 0);
+      continue
+    end
     z = zs(:, cls_id);
     I = find((z > caches{cls_id}.hard_thresh) & ...
              (d.overlap(:, cls_id) < neg_ovr_thresh));
@@ -335,6 +348,8 @@ pos_inds = find(ismember(cache.keys_pos(:,1), fold) == false);
 neg_inds = find(ismember(cache.keys_neg(:,1), fold) == false);
 
 
+% Positive examples are defined simply to be the ground-truth bounding boxes 
+% for each class according to the original paper. -- by coldmooon
 % ------------------------------------------------------------------------
 function [X_pos, keys] = get_positive_pool5_features(imdb, opts)
 % ------------------------------------------------------------------------
