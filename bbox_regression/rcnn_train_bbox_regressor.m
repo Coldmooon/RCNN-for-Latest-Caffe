@@ -119,7 +119,7 @@ function [X, Y, O, C] = get_examples(rcnn_model, imdb, opts)
 % ------------------------------------------------------------------------
 num_classes = length(rcnn_model.classes);
 
-pool5 = 5;
+% pool5 = 5;
 
 roidb = imdb.roidb_func(imdb);
 cls_counts = zeros(num_classes, 1);
@@ -128,7 +128,7 @@ for i = 1:length(imdb.image_ids)
                 procid(), i, length(imdb.image_ids));
 
   d = roidb.rois(i);
-  [max_ov cls] = max(d.overlap, [], 2);
+  [max_ov, cls] = max(d.overlap, [], 2);
   sel_ex = find(max_ov >= 0.5);
   cls = cls(sel_ex);
   for j = 1:length(sel_ex)
@@ -136,7 +136,7 @@ for i = 1:length(imdb.image_ids)
   end
 end
 total = sum(cls_counts);
-feat_dim = size(rcnn_model.cnn.layers(pool5+1).weights{1},1);
+feat_dim = size(rcnn_model.cnn.model.layers('fc6').params(1).get_data(), 1); % 9216
 % features
 X = zeros(total, feat_dim, 'single');
 % target values
