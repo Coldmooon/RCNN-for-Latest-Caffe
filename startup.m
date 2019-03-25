@@ -16,8 +16,8 @@ addpath('bin');
 addpath('nms');
 addpath('finetuning');
 addpath('bbox_regression');
-if exist('external/caffe/matlab/caffe')
-  addpath('external/caffe/matlab/caffe');
+if exist('external/')
+  addpath('external/');
 else
   warning('Please install Caffe in ./external/caffe');
 end
