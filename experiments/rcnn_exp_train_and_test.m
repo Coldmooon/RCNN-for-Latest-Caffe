@@ -31,4 +31,6 @@ else
   res_train = [];
 end
 
+load('./cachedir/voc_2007_trainval/rcnn_model.mat');
+rcnn_model = rcnn_load_model(rcnn_model, 1);
 res_test = rcnn_test(rcnn_model, imdb_test);
